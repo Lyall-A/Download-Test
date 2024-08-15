@@ -1,8 +1,11 @@
 const fs = require("fs");
 const { randomBytes } = require("crypto");
 
+const config = require("./config.json");
+const { createDownloadMultiplier } = config;
+
 const useRandomBytes = process.argv[2] == "random" ? true : false;
-const size = parseInt(process.argv[3]) || 1024 * 1024 * 1024 * 1; // Size in bytes
+const size = parseFloat(process.argv[3]) * createDownloadMultiplier || 1024 * 1024 * 1024 * 1; // Size in bytes
 
 const maxSize = 2**31-1;
 

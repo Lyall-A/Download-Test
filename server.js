@@ -1,24 +1,26 @@
 const net = require("net");
 const fs = require("fs");
 
-// const port = 8080;
-const port = 6969;
+const config = require("./config.json");
+const { port, filePath } = config;
+
 const server = net.createServer();
 
-const size = fs.lstatSync("download").size;
-
 server.on("connection", socket => {
+    const downloadSize = fs.lstatSync(filePath).size;
+
     socket.on("data", data => {
         const string = data.toString();
+
         if (string.startsWith(`GET / HTTP/1.1\r\n`)) {
             const connectDate = new Date();
             console.log(`[${connectDate.toLocaleString()}] Socket connected`);
 
-            socket.write(`HTTP/1.1 200 OK\r\nContent-Disposition: attachment; filename="download-test-${connectDate.getTime()}"\r\nContent-Length: ${size}\r\n\r\n`);
+            socket.write(`HTTP/1.1 200 OK\r\nContent-Disposition: attachment; filename="download-test-${connectDate.getTime()}"\r\nContent-Length: ${downloadSize}\r\n\r\n`);
 
-            const stream = fs.createReadStream("download");
+            const stream = fs.createReadStream(filePath);
             stream.on("data", data => socket.write(data));
-            stream.on("error", () => socket.destroy());
+            stream.on("error", () => socket.end());
             stream.on("end", () => socket.end());
 
             socket.on("close", () => {
@@ -26,7 +28,7 @@ server.on("connection", socket => {
                 console.log(`[${closeDate.toLocaleString()}] Socket closed, connected for ${new Date(closeDate.getTime() - connectDate.getTime()).toISOString().split(":").slice(1).join(":").split(".")[0]}`);
                 stream.destroy();
             });
-        } else socket.destroy();
+        } else socket.end();
     });
 
     socket.on("error", () => { });

@@ -1,0 +1,7 @@
+{
+    "port": 6969,
+    "filePath": "download",
+    "createDownloadMultiplier": 1073741824,
+    "speedIntervalTime": 1000,
+    "speedDiv": 1048576
+}
