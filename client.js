@@ -1,9 +1,9 @@
 const net = require("net");
 
 const config = require("./config.json");
-const { port, filePath, speedIntervalTime, speedDiv } = config;
+const { host, port, clientHost, clientPort, filePath, speedIntervalTime, speedDiv } = config;
 
-const client = net.createConnection({ host: "localhost", port });
+const client = net.createConnection({ host: clientHost || host, port: clientPort || port });
 
 let dataSize = 0;
 let speed = 0;
@@ -15,7 +15,7 @@ let speedInterval;
 console.log("Connecting to server");
 client.on("connect", () => {
     console.log("Connected to server");
-    client.write("GET / HTTP/1.1\r\n\r\n");
+    client.write(`GET / HTTP/1.1\r\nHost: ${clientHost || host}:${clientPort || port}\r\n\r\n`);
     speedInterval = setInterval(() => {
         speedHistory.push(speed);
         averageSpeed = speedHistory.reduce((prev, curr) => prev + curr) / speedHistory.length;

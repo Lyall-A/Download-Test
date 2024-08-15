@@ -1,4 +1,5 @@
 {
+    "host": "localhost",
     "port": 6969,
     "filePath": "download",
     "createDownloadMultiplier": 1073741824,

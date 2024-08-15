@@ -2,7 +2,7 @@ const net = require("net");
 const fs = require("fs");
 
 const config = require("./config.json");
-const { port, filePath } = config;
+const { host, port, filePath } = config;
 
 const server = net.createServer();
 
@@ -34,4 +34,4 @@ server.on("connection", socket => {
     socket.on("error", () => { });
 });
 
-server.listen(port, () => console.log(`Listening at :${port}`));
+server.listen(port, host, () => console.log(`Listening at :${port}`));
